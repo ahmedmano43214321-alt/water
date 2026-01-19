@@ -1,0 +1,42 @@
+// تحسينات فورية:
+- إضافة تأثيرات أكثر سلاسة (animations)
+- تحسين تجربة الهاتف المحمول
+- إضافة وضع ملء الشاشة (Fullscreen mode)
+- تحسين سرعة التحميل
+
+
+
+// ميزات جديدة:
+- إضافة Search Bar للبحث في المحطات
+- نظام Favorites للمحطات المهمة
+- Dark Mode متكامل مع حفظ التفضيلات
+- إشعارات داخل المتصفح (Browser Notifications)
+
+
+// استخدام Chart.js بشكل متقدم:
+- مخططات متحركة (Animated Charts)
+- تحديثات في الوقت الحقيقي (Real-time updates)
+- تفاعل عند النقر (Click Events)
+- تصدير المخططات كـ PNG/PDF
+
+
+// تحسينات Leaflet:
+- إضافة Clusters للمحطات القريبة
+- خطوط الربط بين المحطات (Connections)
+- مناطق الخطر (Heat Maps)
+- تحديد الموقع الحالي (Geolocation)
+
+
+// إشعارات داخل التطبيق:
+function showNotification(type, message) {
+  // Toast notifications
+  // Sound alerts
+  // Browser push notifications
+}
+
+
+// يجب إتقان:
+- Async/Await للتعامل مع APIs
+- LocalStorage/SessionStorage
+- Service Workers (للـ PWA)
+- WebSockets للبيانات الحية

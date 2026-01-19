@@ -3,1208 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تتبع جودة المياه - الحياة الذكي</title>
+    <title>نظام تتبع جودة المياه - الحياة الذكي شريان</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', 'Tajawal', sans-serif;
-        }
-
-        :root {
-            --primary: #2c7fb8;
-            --secondary: #7fcdbb;
-            --accent: #edf8b1;
-            --danger: #e6555a;
-            --warning: #fdae6b;
-            --success: #31a354;
-            --solar: #f9c74f;
-            --dark: #253237;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-        }
-
-        /* صفحة تسجيل الدخول */
-        #login-page {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            width: 100%;
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 550px;
-        }
-
-        .login-box {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 25px;
-            padding: 50px 40px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            color: #333;
-            animation: floatIn 1s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        @keyframes floatIn {
-            0% {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo-icon {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-            font-size: 3.5rem;
-            color: white;
-            border: 5px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .logo h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-        }
-
-        .logo p {
-            font-size: 1.1rem;
-            color: #666;
-            font-weight: 300;
-            line-height: 1.6;
-        }
-
-        .login-tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
-            padding-bottom: 10px;
-        }
-
-        .login-tab {
-            padding: 12px 25px;
-            cursor: pointer;
-            border-radius: 25px;
-            margin: 0 5px;
-            transition: all 0.3s;
-            font-weight: 600;
-            background: transparent;
-            border: none;
-            color: #666;
-            font-size: 1rem;
-            position: relative;
-        }
-
-        .login-tab:hover {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-        }
-
-        .login-tab.active {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.15);
-        }
-
-        .login-form {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-form.active {
-            display: block;
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-            text-align: right;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-            text-align: right;
-            font-size: 0.95rem;
-        }
-
-        .input-group input, 
-        .input-group select {
-            width: 100%;
-            padding: 16px 55px 16px 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            font-size: 1rem;
-            color: #333;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .input-group input:focus, 
-        .input-group select:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
-        }
-
-        .input-group i {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            color: #667eea;
-            font-size: 1.1rem;
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #999;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: color 0.3s;
-        }
-
-        .toggle-password:hover {
-            color: #667eea;
-        }
-
-        .password-strength {
-            height: 5px;
-            background: #e0e0e0;
-            margin-top: 8px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s;
-            border-radius: 5px;
-        }
-
-        .strength-weak { background: var(--danger); }
-        .strength-medium { background: var(--warning); }
-        .strength-strong { background: var(--success); }
-
-        .password-hint {
-            font-size: 0.8rem;
-            color: #666;
-            margin-top: 5px;
-            text-align: right;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .remember-me input {
-            margin-left: 8px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .login-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
-        }
-
-        .login-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .login-btn i {
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .forgot-password {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #667eea;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s ease;
-            font-weight: 500;
-        }
-
-        .forgot-password:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-
-        .message {
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            display: none;
-            animation: fadeIn 0.3s ease;
-            text-align: right;
-            line-height: 1.6;
-        }
-
-        .error {
-            background: linear-gradient(135deg, rgba(230, 85, 90, 0.1), rgba(230, 85, 90, 0.05));
-            color: #e6555a;
-            border: 1px solid rgba(230, 85, 90, 0.2);
-        }
-
-        .success {
-            background: linear-gradient(135deg, rgba(49, 163, 84, 0.1), rgba(49, 163, 84, 0.05));
-            color: #31a354;
-            border: 1px solid rgba(49, 163, 84, 0.2);
-        }
-
-        .demo-accounts {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(102, 126, 234, 0.05);
-            border-radius: 15px;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-        }
-
-        .demo-accounts h4 {
-            margin-bottom: 15px;
-            color: #555;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .demo-account {
-            background: white;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin: 8px 0;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .demo-account:hover {
-            background: rgba(102, 126, 234, 0.1);
-            border-color: rgba(102, 126, 234, 0.2);
-            transform: translateX(-5px);
-        }
-
-        .demo-account i {
-            color: #667eea;
-            font-size: 1rem;
-        }
-
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 0.9rem;
-            color: #888;
-            line-height: 1.6;
-        }
-
-        /* النظام الرئيسي */
-        #main-app {
-            display: none;
-        }
-
-        body.logged-in {
-            background-color: #f0f7ff;
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        body.logged-in #login-page {
-            display: none;
-        }
-
-        body.logged-in #main-app {
-            display: flex;
-            flex-direction: row;
-        }
-
-        .sidebar {
-            width: 70px;
-            background: linear-gradient(to bottom, var(--primary), #1d5f8a);
-            color: white;
-            padding: 20px 0;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            position: fixed;
-            height: 100vh;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar:hover {
-            width: 220px;
-        }
-
-        .sidebar-logo {
-            text-align: center;
-            padding: 20px 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .sidebar-logo h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            opacity: 0;
-            transition: opacity 0.3s ease 0.2s;
-        }
-
-        .sidebar-logo p {
-            font-size: 0.8rem;
-            opacity: 0;
-            transition: opacity 0.3s ease 0.2s;
-        }
-
-        .sidebar:hover .sidebar-logo h1,
-        .sidebar:hover .sidebar-logo p {
-            opacity: 1;
-        }
-
-        .nav-links {
-            list-style: none;
-            padding: 0 10px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        .nav-links li {
-            margin-bottom: 5px;
-        }
-
-        .nav-links a {
-            display: flex;
-            align-items: center;
-            padding: 12px 10px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-links i {
-            margin-left: 10px;
-            font-size: 1.4rem;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .nav-links span {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar:hover .nav-links span {
-            opacity: 1;
-        }
-
-        .sidebar-footer {
-            padding: 20px 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: auto;
-        }
-
-        .logout-link {
-            display: flex;
-            align-items: center;
-            padding: 12px 10px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            white-space: nowrap;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .logout-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .logout-link i {
-            margin-left: 10px;
-            font-size: 1.4rem;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .logout-link span {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar:hover .logout-link span {
-            opacity: 1;
-        }
-
-        .main-content {
-            margin-right: 70px;
-            padding: 20px;
-            overflow-y: auto;
-            transition: all 0.3s ease;
-            min-height: 100vh;
-            flex-grow: 1;
-        }
-
-        .sidebar:hover ~ .main-content {
-            margin-right: 220px;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e0e0e0;
-            flex-wrap: wrap;
-        }
-
-        .header h2 {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .user-info img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-left: 10px;
-            border: 2px solid var(--primary);
-        }
-
-        .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-card {
-            display: flex;
-            align-items: center;
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 15px;
-            font-size: 1.8rem;
-            color: white;
-        }
-
-        .ph-icon { background-color: var(--primary); }
-        .turbidity-icon { background-color: var(--secondary); }
-        .oxygen-icon { background-color: var(--success); }
-        .temp-icon { background-color: var(--warning); }
-        .solar-icon { background-color: var(--solar); }
-
-        .stat-info h3 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-
-        .stat-info p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .trend {
-            display: flex;
-            align-items: center;
-            font-size: 0.8rem;
-            margin-top: 5px;
-        }
-
-        .up { color: var(--success); }
-        .down { color: var(--danger); }
-
-        .charts {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .chart-header h3 {
-            color: var(--dark);
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .chart-wrapper {
-            height: 250px;
-            position: relative;
-        }
-
-        .stations {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .stations-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .stations-header h3 {
-            color: var(--dark);
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .stations-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .stations-table th, .stations-table td {
-            padding: 12px 15px;
-            text-align: right;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .stations-table th {
-            color: var(--gray);
-            font-weight: 500;
-        }
-
-        .status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .status-normal {
-            background-color: rgba(49, 163, 84, 0.1);
-            color: var(--success);
-        }
-
-        .status-warning {
-            background-color: rgba(253, 174, 107, 0.1);
-            color: var(--warning);
-        }
-
-        .status-critical {
-            background-color: rgba(230, 85, 90, 0.1);
-            color: var(--danger);
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 60px 40px;
-            border-radius: 15px;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .hero-section h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .hero-section p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 30px;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-            color: white;
-        }
-
-        .project-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .project-image {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .project-image img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .image-caption {
-            padding: 15px;
-            text-align: center;
-        }
-
-        #map {
-            height: 500px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .map-container {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-
-        .solar-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .solar-benefits {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .benefit-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background: rgba(249, 199, 79, 0.1);
-            border-radius: 8px;
-        }
-
-        .benefit-item i {
-            color: var(--solar);
-            font-size: 1.5rem;
-            margin-left: 10px;
-        }
-
-        .team-section {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 25px;
-        }
-
-        .team-member {
-            text-align: center;
-            padding: 25px;
-            background: var(--light);
-            border-radius: 12px;
-            transition: transform 0.3s ease;
-        }
-
-        .team-member:hover {
-            transform: translateY(-5px);
-        }
-
-        .member-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            border: 4px solid var(--primary);
-            overflow: hidden;
-        }
-
-        .member-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .member-role {
-            color: var(--primary);
-            font-weight: 600;
-            margin: 5px 0;
-        }
-
-        .member-tasks {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-top: 10px;
-        }
-
-        .supervisors {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .supervisor-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            text-align: center;
-        }
-
-        .settings-section {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-bottom: 30px;
-        }
-
-        .settings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 25px;
-        }
-
-        .setting-group {
-            margin-bottom: 25px;
-        }
-
-        .setting-group h4 {
-            margin-bottom: 15px;
-            color: var(--primary);
-            border-bottom: 2px solid var(--light);
-            padding-bottom: 8px;
-        }
-
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-            flex-wrap: wrap;
-        }
-
-        .setting-info {
-            flex: 1;
-            min-width: 200px;
-            margin-bottom: 10px;
-        }
-
-        .setting-info h5 {
-            margin-bottom: 5px;
-        }
-
-        .setting-info p {
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-
-        .select-setting {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
-            background: white;
-            min-width: 150px;
-        }
-
-        .btn-save {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background 0.3s ease;
-        }
-
-        .btn-save:hover {
-            background: #1d5f8a;
-        }
-
-        /* الوضع الليلي */
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-        }
-
-        body.dark-mode .main-content {
-            background-color: #1a1a1a;
-        }
-
-        body.dark-mode .card,
-        body.dark-mode .chart-container,
-        body.dark-mode .stations,
-        body.dark-mode .feature-card,
-        body.dark-mode .team-section,
-        body.dark-mode .settings-section,
-        body.dark-mode .solar-benefits,
-        body.dark-mode .project-image,
-        body.dark-mode .supervisor-card,
-        body.dark-mode .team-member {
-            background-color: #2d2d2d;
-            color: #e0e0e0;
-        }
-
-        body.dark-mode .login-box {
-            background: rgba(45, 45, 45, 0.95);
-            color: #e0e0e0;
-        }
-
-        /* تصميم متجاوب */
-        @media (max-width: 992px) {
-            .charts {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: 70px;
-                position: fixed;
-                bottom: 0;
-                top: auto;
-                flex-direction: row;
-                justify-content: space-around;
-                padding: 0;
-            }
-            
-            .sidebar:hover {
-                width: 100%;
-            }
-            
-            .sidebar-logo {
-                display: none;
-            }
-            
-            .nav-links {
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                padding: 0;
-                margin: 0;
-            }
-            
-            .nav-links li {
-                flex: 1;
-                margin: 0;
-            }
-            
-            .nav-links a {
-                flex-direction: column;
-                padding: 10px 5px;
-                font-size: 0.7rem;
-            }
-            
-            .nav-links i {
-                margin: 0 0 5px 0;
-                font-size: 1.2rem;
-            }
-            
-            .nav-links span {
-                opacity: 1;
-                font-size: 0.7rem;
-            }
-            
-            .sidebar-footer {
-                display: none;
-            }
-            
-            .main-content {
-                margin-right: 0;
-                margin-bottom: 70px;
-                padding-bottom: 20px;
-            }
-            
-            .sidebar:hover ~ .main-content {
-                margin-right: 0;
-            }
-
-            .login-container {
-                max-width: 95%;
-            }
-            
-            .login-box {
-                padding: 40px 25px;
-            }
-            
-            #map {
-                height: 300px;
-            }
-
-            .hero-section {
-                padding: 40px 20px;
-            }
-            
-            .hero-section h1 {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .login-box {
-                padding: 30px 20px;
-            }
-            
-            .logo h1 {
-                font-size: 1.8rem;
-            }
-            
-            .login-tabs {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .login-tab {
-                width: 100%;
-                margin: 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- صفحة تسجيل الدخول -->
@@ -1215,7 +20,7 @@
                     <div class="logo-icon">
                         <i class="fas fa-water"></i>
                     </div>
-                    <h1>شريان الحياة الذكي</h1>
+                    <h1>شريان الحياة الذكي شريان</h1>
                     <p>نظام تتبع جودة المياه باستخدام إنترنت الأشياء والطاقة الشمسية</p>
                 </div>
                 
@@ -1245,7 +50,7 @@
                     
                     <div class="remember-me">
                         <label for="remember-me">
-                            <input type="checkbox" id="remember-me">
+                            <input type="checkbox" id="remember-me" checked>
                             تذكرني على هذا الجهاز
                         </label>
                     </div>
@@ -1358,7 +163,7 @@
     <div id="main-app">
         <div class="sidebar">
             <div class="sidebar-logo">
-                <h1>الحياة الذكي</h1>
+                <h1>الحياة الذكي شريان</h1>
                 <p>نظام تتبع جودة المياه</p>
             </div>
             
@@ -1381,7 +186,7 @@
         </div>
 
         <div class="main-content">
-            <!-- صفحة النظرة العامة -->
+            <!-- صفحة النظرة العامة - محسنة -->
             <div class="page active" id="home-page">
                 <div class="header">
                     <h2>نظرة عامة عن المشروع</h2>
@@ -1396,38 +201,151 @@
 
                 <div class="hero-section">
                     <h1>نظام تتبع جودة المياه باستخدام إنترنت الأشياء</h1>
-                    <p>مشروع مبتكر لمراقبة جودة المياه في الوقت الحقيقي باستخدام أحدث تقنيات إنترنت الأشياء والذكاء الاصطناعي</p>
+                    <p>مشروع مبتكر لمراقبة جودة المياه في الوقت الحقيقي باستخدام أحدث تقنيات إنترنت الأشياء والذكاء الاصطناعي والطاقة الشمسية</p>
                 </div>
 
-                <div class="features">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-tint"></i>
-                        </div>
-                        <h3>مراقبة في الوقت الحقيقي</h3>
-                        <p>نظام متكامل لمراقبة جودة المياه على مدار 24 ساعة</p>
+                <div class="project-details">
+                    <div class="detail-card">
+                        <h3><i class="fas fa-bullseye"></i> أهداف المشروع</h3>
+                        <p>• تطوير نظام ذكي لمراقبة جودة المياه باستمرار</p>
+                        <p>• توفير بيانات دقيقة في الوقت الحقيقي للجهات المعنية</p>
+                        <p>• التنبيه المبكر عن أي تلوث أو انحراف في معايير الجودة</p>
+                        <p>• تقديم حل مستدام باستخدام الطاقة الشمسية</p>
+                        <p>• تحليل البيانات باستخدام الذكاء الاصطناعي للتنبؤ بالمشكلات</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-microchip"></i>
+                    
+                    <div class="detail-card">
+                        <h3><i class="fas fa-cogs"></i> التقنيات المستخدمة</h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge"><i class="fas fa-microchip"></i> أجهزة استشعار IoT</span>
+                            <span class="tech-badge"><i class="fas fa-sun"></i> الطاقة الشمسية</span>
+                            <span class="tech-badge"><i class="fas fa-brain"></i> الذكاء الاصطناعي</span>
+                            <span class="tech-badge"><i class="fas fa-cloud"></i> الحوسبة السحابية</span>
+                            <span class="tech-badge"><i class="fas fa-mobile-alt"></i> تطبيقات الهواتف</span>
+                            <span class="tech-badge"><i class="fas fa-chart-line"></i> تحليل البيانات</span>
                         </div>
-                        <h3>تقنيات متطورة</h3>
-                        <p>استخدام أحدث أجهزة الاستشعار وتقنيات إنترنت الأشياء</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-leaf"></i>
+                    
+                    <div class="detail-card">
+                        <h3><i class="fas fa-trophy"></i> الإنجازات المتوقعة</h3>
+                        <p>• خفض تكاليف المراقبة بنسبة 60%</p>
+                        <p>• تحسين دقة القياسات بنسبة 95%</p>
+                        <p>• تقليل وقت الاستجابة للطوارئ بنسبة 80%</p>
+                        <p>• توفير طاقة نظيفة بنسبة 100% للتشغيل</p>
+                        <p>• زيادة وعي المجتمع بأهمية جودة المياه</p>
+                    </div>
+                </div>
+
+                <h2 class="section-title"><i class="fas fa-images"></i> معرض المشروع</h2>
+                
+                <div class="image-gallery">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="محطة مراقبة المياه">
+                        <div class="gallery-overlay">
+                            <h4>محطة مراقبة ذكية</h4>
+                            <p>محطات مزودة بأحدث أجهزة الاستشعار</p>
                         </div>
-                        <h3>صديق للبيئة</h3>
-                        <p>تشغيل النظام بالكامل بالطاقة الشمسية</p>
                     </div>
+                    
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="الألواح الشمسية">
+                        <div class="gallery-overlay">
+                            <h4>نظام الطاقة الشمسية</h4>
+                            <p>تشغيل مستدام بالطاقة النظيفة</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="لوحة التحكم">
+                        <div class="gallery-overlay">
+                            <h4>لوحة تحكم متقدمة</h4>
+                            <p>مراقبة وتحليل في الوقت الحقيقي</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="section-title"><i class="fas fa-project-diagram"></i> مراحل التنفيذ</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item completed">
+                        <h3>المرحلة الأولى: التصميم والتخطيط</h3>
+                        <p>تحليل المتطلبات وتصميم النظام وهندسة الحلول التقنية</p>
+                        <small>تم الانتهاء: سبتمبر 2023</small>
+                    </div>
+                    
+                    <div class="timeline-item completed">
+                        <h3>المرحلة الثانية: التطوير</h3>
+                        <p>برمجة النظام وتطوير الواجهات وبناء قاعدة البيانات</p>
+                        <small>تم الانتهاء: ديسمبر 2023</small>
+                    </div>
+                    
+                    <div class="timeline-item current">
+                        <h3>المرحلة الثالثة: النشر والتجربة</h3>
+                        <p>تركيب المحطات والتجربة الميدانية وضبط المعايير</p>
+                        <small>قيد التنفيذ: يناير 2024 - مارس 2024</small>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <h3>المرحلة الرابعة: التشغيل الكامل</h3>
+                        <p>بدء التشغيل الرسمي والتدريب والصيانة الدورية</p>
+                        <small>مخطط: أبريل 2024</small>
+                    </div>
+                </div>
+
+                <div class="detail-card" style="margin-top: 40px;">
+                    <h3><i class="fas fa-handshake"></i> الشركاء والداعمون</h3>
+                    <p>• وزارة الموارد المائية والري</p>
+                    <p>• جهاز شئون البيئة</p>
+                    <p>• جامعة المنصورة - كلية الحاسبات والمعلومات</p>
+                    <p>• مركز بحوث المياه</p>
+                    <p>• منظمة الصحة العالمية (WHO)</p>
                 </div>
             </div>
 
-            <!-- صفحة لوحة البيانات -->
+            <!-- صفحة لوحة البيانات - محسنة -->
             <div class="page" id="dashboard-page">
                 <div class="header">
                     <h2>لوحة متابعة جودة المياه</h2>
+                    <div class="quick-actions">
+                        <button class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <span>تصدير التقرير</span>
+                        </button>
+                        <button class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <span>الإشعارات</span>
+                        </button>
+                        <button class="action-btn">
+                            <div class="action-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <span>تحديث البيانات</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard-alerts">
+                    <h3 style="color: white; margin-bottom: 20px;">
+                        <i class="fas fa-exclamation-circle"></i> تنبيهات النظام
+                    </h3>
+                    <div class="alert-item">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <h4 style="margin-bottom: 5px;">محطة فرع رشيد تحت المراقبة</h4>
+                            <p>ارتفاع مستوى العكورة إلى 4.2 NTU</p>
+                        </div>
+                    </div>
+                    <div class="alert-item">
+                        <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <h4 style="margin-bottom: 5px;">جميع المحطات الأخرى مستقرة</h4>
+                            <p>المعايير ضمن المعدلات الطبيعية</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="stats-cards">
@@ -1492,6 +410,14 @@
                     <div class="chart-container">
                         <div class="chart-header">
                             <h3>تطور جودة المياه خلال الأسبوع</h3>
+                            <div class="control-group" style="margin: 0;">
+                                <button class="control-btn active" data-chart="weekly">
+                                    أسبوعي
+                                </button>
+                                <button class="control-btn" data-chart="monthly">
+                                    شهري
+                                </button>
+                            </div>
                         </div>
                         <div class="chart-wrapper">
                             <canvas id="waterQualityChart"></canvas>
@@ -1511,6 +437,9 @@
                 <div class="stations">
                     <div class="stations-header">
                         <h3>محطات المراقبة</h3>
+                        <button class="btn-save" style="padding: 8px 20px;">
+                            <i class="fas fa-plus"></i> إضافة محطة جديدة
+                        </button>
                     </div>
                     <table class="stations-table">
                         <thead>
@@ -1521,6 +450,7 @@
                                 <th>pH</th>
                                 <th>العكورة</th>
                                 <th>الأكسجين</th>
+                                <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1531,6 +461,11 @@
                                 <td>7.2</td>
                                 <td>1.8</td>
                                 <td>8.5</td>
+                                <td>
+                                    <button style="background: none; border: none; color: var(--primary); cursor: pointer;" title="عرض التفاصيل">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
                                 <td><span class="status status-warning">تحذير</span></td>
@@ -1539,6 +474,11 @@
                                 <td>6.8</td>
                                 <td>4.2</td>
                                 <td>6.1</td>
+                                <td>
+                                    <button style="background: none; border: none; color: var(--warning); cursor: pointer;" title="إرسال فريق الصيانة">
+                                        <i class="fas fa-tools"></i>
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
                                 <td><span class="status status-normal">طبيعي</span></td>
@@ -1547,24 +487,122 @@
                                 <td>7.4</td>
                                 <td>2.1</td>
                                 <td>7.9</td>
+                                <td>
+                                    <button style="background: none; border: none; color: var(--primary); cursor: pointer;" title="عرض التفاصيل">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+                <div class="detail-card" style="margin-top: 30px;">
+                    <h3><i class="fas fa-chart-line"></i> تحليل الأداء</h3>
+                    <p>• معدل التغير في جودة المياه: <span class="stat-badge success">+2.3%</span></p>
+                    <p>• نسبة استقرار المحطات: <span class="stat-badge primary">85%</span></p>
+                    <p>• وقت التشغيل بدون أعطال: <span class="stat-badge success">99.8%</span></p>
+                    <p>• كفاءة النظام الشمسي: <span class="stat-badge warning">92%</span></p>
+                    <div style="margin-top: 20px;">
+                        <p><strong>توصيات:</strong></p>
+                        <p>✓ زيادة فحص محطة فرع رشيد</p>
+                        <p>✓ إجراء صيانة دورية للألواح الشمسية</p>
+                        <p>✓ تحديث بيانات المحطات كل 6 ساعات</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- صفحة الخريطة -->
+            <!-- صفحة الخريطة التفاعلية - محسنة -->
             <div class="page" id="map-page">
                 <div class="header">
                     <h2>الخريطة التفاعلية</h2>
                 </div>
 
+                <div class="map-controls">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">
+                        <i class="fas fa-filter"></i> تصفية المحطات
+                    </h3>
+                    
+                    <div class="control-group">
+                        <button class="control-btn active" data-filter="all">
+                            <i class="fas fa-globe"></i> جميع المحطات
+                        </button>
+                        <button class="control-btn" data-filter="normal">
+                            <i class="fas fa-check-circle"></i> محطات طبيعية
+                        </button>
+                        <button class="control-btn" data-filter="warning">
+                            <i class="fas fa-exclamation-triangle"></i> محطات تحذير
+                        </button>
+                        <button class="control-btn" data-filter="critical">
+                            <i class="fas fa-skull-crossbones"></i> محطات حرجة
+                        </button>
+                    </div>
+                    
+                    <div class="control-group">
+                        <button class="control-btn" data-layer="satellite">
+                            <i class="fas fa-satellite"></i> عرض القمر الصناعي
+                        </button>
+                        <button class="control-btn active" data-layer="street">
+                            <i class="fas fa-map"></i> عرض الشوارع
+                        </button>
+                        <button class="control-btn" id="refresh-map">
+                            <i class="fas fa-sync-alt"></i> تحديث البيانات
+                        </button>
+                    </div>
+                </div>
+
                 <div class="map-container">
                     <div id="map"></div>
                 </div>
+
+                <div class="station-details">
+                    <h3 style="margin-bottom: 20px; color: var(--primary);">
+                        <i class="fas fa-info-circle"></i> تفاصيل المحطة المحددة
+                    </h3>
+                    
+                    <div id="selected-station-info" style="text-align: center; padding: 20px; background: rgba(44, 127, 184, 0.05); border-radius: 10px;">
+                        <p style="color: var(--gray);">اضغط على أي محطة في الخريطة لعرض تفاصيلها</p>
+                    </div>
+                    
+                    <div id="station-metrics" class="station-info-grid" style="display: none;">
+                        <div class="station-metric">
+                            <i class="fas fa-vial" style="font-size: 2rem; color: var(--primary);"></i>
+                            <div class="station-metric-value" id="station-ph">7.2</div>
+                            <p>الأس الهيدروجيني</p>
+                        </div>
+                        
+                        <div class="station-metric">
+                            <i class="fas fa-water" style="font-size: 2rem; color: var(--secondary);"></i>
+                            <div class="station-metric-value" id="station-turbidity">2.1</div>
+                            <p>العكورة (NTU)</p>
+                        </div>
+                        
+                        <div class="station-metric">
+                            <i class="fas fa-wind" style="font-size: 2rem; color: var(--success);"></i>
+                            <div class="station-metric-value" id="station-oxygen">8.4</div>
+                            <p>الأكسجين الذائب</p>
+                        </div>
+                        
+                        <div class="station-metric">
+                            <i class="fas fa-thermometer-half" style="font-size: 2rem; color: var(--warning);"></i>
+                            <div class="station-metric-value" id="station-temperature">24°C</div>
+                            <p>درجة الحرارة</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-card" style="margin-top: 30px;">
+                    <h3><i class="fas fa-chart-bar"></i> إحصائيات الخريطة</h3>
+                    <p>• عدد المحطات النشطة: <strong>12 محطة</strong></p>
+                    <p>• المحطات الطبيعية: <strong style="color: var(--success);">8 محطات</strong></p>
+                    <p>• المحطات تحت المراقبة: <strong style="color: var(--warning);">3 محطات</strong></p>
+                    <p>• المحطات الحرجة: <strong style="color: var(--danger);">1 محطة</strong></p>
+                    <p>• آخر تحديث: <strong>منذ 5 دقائق</strong></p>
+                    <p>• نسبة تغطية الشبكة: <strong>85% من المناطق المستهدفة</strong></p>
+                </div>
             </div>
 
-            <!-- صفحة الطاقة الشمسية -->
+            <!-- صفحة الطاقة الشمسية - محسنة -->
             <div class="page" id="solar-page">
                 <div class="header">
                     <h2>نظام الطاقة الشمسية</h2>
@@ -1633,227 +671,347 @@
                     </div>
                 </div>
 
+                <h2 class="section-title"><i class="fas fa-solar-panel"></i> مكونات النظام الشمسي</h2>
+                
+                <div class="solar-system">
+                    <div class="solar-component">
+                        <div class="solar-component-icon">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <h3>الألواح الشمسية</h3>
+                        <p>8 ألواح - 300 واط لكل لوح</p>
+                        <p>إجمالي الطاقة: 2400 واط</p>
+                        <p>الكفاءة: 21%</p>
+                    </div>
+                    
+                    <div class="solar-component">
+                        <div class="solar-component-icon">
+                            <i class="fas fa-battery-full"></i>
+                        </div>
+                        <h3>نظام البطاريات</h3>
+                        <p>4 بطاريات ليثيوم</p>
+                        <p>السعة: 200 أمبير/ساعة</p>
+                        <p>العمر الافتراضي: 5 سنوات</p>
+                    </div>
+                    
+                    <div class="solar-component">
+                        <div class="solar-component-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3>منظم الشحن</h3>
+                        <p>نوع MPPT</p>
+                        <p>السعة: 60 أمبير</p>
+                        <p>الكفاءة: 98%</p>
+                    </div>
+                    
+                    <div class="solar-component">
+                        <div class="solar-component-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3>العاكس (Inverter)</h3>
+                        <p>القدرة: 3000 واط</p>
+                        <p>النوع: موجة جيبية نقية</p>
+                        <p>الكفاءة: 95%</p>
+                    </div>
+                </div>
+
+                <div class="solar-simulation">
+                    <h3 style="margin-bottom: 20px; color: var(--solar);">
+                        <i class="fas fa-chart-line"></i> محاكاة إنتاج الطاقة
+                    </h3>
+                    
+                    <div class="simulation-controls">
+                        <button class="control-btn active" data-period="today">
+                            اليوم
+                        </button>
+                        <button class="control-btn" data-period="week">
+                            الأسبوع
+                        </button>
+                        <button class="control-btn" data-period="month">
+                            الشهر
+                        </button>
+                    </div>
+                    
+                    <div class="chart-wrapper" style="height: 200px; margin-top: 20px;">
+                        <canvas id="solarProductionChart"></canvas>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p>إنتاج الطاقة اليوم: <strong>8.2 كيلوواط/ساعة</strong></p>
+                        <p>استهلاك النظام: <strong>6.5 كيلوواط/ساعة</strong></p>
+                        <p>الفائض المخزن: <strong>1.7 كيلوواط/ساعة</strong></p>
+                    </div>
+                </div>
+
                 <div class="solar-benefits">
                     <h3 style="margin-bottom: 20px; color: var(--primary);">
-                        <i class="fas fa-award"></i> مزايا النظام الشمسي
+                        <i class="fas fa-award"></i> فوائد النظام الشمسي
                     </h3>
                     <div class="benefits-grid">
                         <div class="benefit-item">
                             <i class="fas fa-infinity"></i>
                             <div>
-                                <h4 style="margin-bottom: 5px;">طاقة متجددة</h4>
-                                <p style="font-size: 0.9rem; color: #666;">مصدر طاقة لا ينضب</p>
+                                <h4 style="margin-bottom: 5px;">استدامة</h4>
+                                <p style="font-size: 0.9rem; color: #666;">مصدر طاقة متجدد لا ينضب</p>
                             </div>
                         </div>
                         <div class="benefit-item">
                             <i class="fas fa-money-bill-wave"></i>
                             <div>
-                                <h4 style="margin-bottom: 5px;">توفير التكاليف</h4>
-                                <p style="font-size: 0.9rem; color: #666;">تقليل فواتير الكهرباء</p>
+                                <h4 style="margin-bottom: 5px;">اقتصادي</h4>
+                                <p style="font-size: 0.9rem; color: #666;">توفير 100% من فواتير الكهرباء</p>
                             </div>
                         </div>
                         <div class="benefit-item">
                             <i class="fas fa-tools"></i>
                             <div>
-                                <h4 style="margin-bottom: 5px;">صيانة قليلة</h4>
-                                <p style="font-size: 0.9rem; color: #666;">تكاليف صيانة منخفضة</p>
+                                <h4 style="margin-bottom: 5px;">قليل الصيانة</h4>
+                                <p style="font-size: 0.9rem; color: #666;">تكاليف صيانة منخفضة جداً</p>
                             </div>
                         </div>
                         <div class="benefit-item">
                             <i class="fas fa-map-marker-alt"></i>
                             <div>
-                                <h4 style="margin-bottom: 5px;">تشغيل نائي</h4>
-                                <p style="font-size: 0.9rem; color: #666;">عمل في مناطق نائية</p>
+                                <h4 style="margin-bottom: 5px;">مرونة</h4>
+                                <p style="font-size: 0.9rem; color: #666;">يعمل في المناطق النائية</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="chart-container">
-                    <div class="chart-header">
-                        <h3>إنتاج الطاقة الشمسية اليومي</h3>
-                    </div>
-                    <div class="chart-wrapper">
-                        <canvas id="solarProductionChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="solar-benefits" style="margin-top: 30px;">
-                    <h3 style="margin-bottom: 20px; color: var(--primary);">
-                        <i class="fas fa-info-circle"></i> مواصفات النظام
-                    </h3>
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h5>عدد الألواح الشمسية</h5>
-                            <p>8 ألواح بقدرة 300 واط لكل لوح</p>
+                <div class="image-gallery" style="margin-top: 40px;">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="الألواح الشمسية">
+                        <div class="gallery-overlay">
+                            <h4>تركيب الألواح الشمسية</h4>
+                            <p>نظام كامل 2.4 كيلوواط</p>
                         </div>
                     </div>
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h5>سعة البطاريات</h5>
-                            <p>4 بطاريات بسعة 200 أمبير/ساعة</p>
+                    
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1624395213043-fa2e123b2656?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="نظام البطاريات">
+                        <div class="gallery-overlay">
+                            <h4>نظام تخزين الطاقة</h4>
+                            <p>بطاريات ليثيوم عالية الكفاءة</p>
                         </div>
                     </div>
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h5>نوع المنظم</h5>
-                            <p>MPPT بقدرة 60 أمبير</p>
-                        </div>
-                    </div>
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h5>العاكس (Inverter)</h5>
-                            <p>عاكس نقي بقدرة 3000 واط</p>
+                    
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1558449028-b53a39d100fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="مراقبة النظام">
+                        <div class="gallery-overlay">
+                            <h4>مراقبة الأداء</h4>
+                            <p>نظام تحكم ومراقبة متكامل</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- صفحة نصائح المياه -->
+            <!-- صفحة نصائح المياه - محسنة -->
             <div class="page" id="tips-page">
                 <div class="header">
                     <h2>نصائح وإرشادات المياه</h2>
                 </div>
 
-                <div class="hero-section" style="background: linear-gradient(135deg, #2c7fb8, #7fcdbb);">
-                    <h1><i class="fas fa-lightbulb"></i> دليلك الشامل للمياه الآمنة</h1>
-                    <p>معلومات مهمة ونصائح عملية للحفاظ على جودة المياه وصحتك</p>
+                <div class="water-importance">
+                    <h1><i class="fas fa-tint"></i> أهمية المياه في حياتنا</h1>
+                    <p style="font-size: 1.2rem; margin-top: 20px;">الماء هو سر الحياة، يشكل 70% من أجسامنا و 71% من كوكب الأرض. حفاظنا عليه هو حفاظ على مستقبلنا</p>
                 </div>
 
-                <div class="team-section">
-                    <h3><i class="fas fa-tint"></i> مؤشرات جودة المياه</h3>
-                    <div class="team-grid">
-                        <div class="team-member" style="text-align: right; padding: 30px;">
-                            <div style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;">
-                                <i class="fas fa-vial"></i>
-                            </div>
-                            <h4 style="color: var(--primary); margin-bottom: 10px;">الأس الهيدروجيني (pH)</h4>
-                            <p style="line-height: 1.8; color: #555;">
-                                <strong>المعدل الطبيعي:</strong> 6.5 - 8.5<br>
-                                <strong>الأهمية:</strong> يؤثر على طعم الماء وفعالية التطهير<br>
-                                <strong>تحذير:</strong> pH أقل من 6.5 أو أعلى من 8.5 قد يسبب مشاكل صحية
-                            </p>
+                <div class="importance-grid">
+                    <div class="importance-card">
+                        <div class="importance-icon">
+                            <i class="fas fa-heart"></i>
                         </div>
-                        
-                        <div class="team-member" style="text-align: right; padding: 30px;">
-                            <div style="font-size: 3rem; color: var(--secondary); margin-bottom: 15px;">
-                                <i class="fas fa-water"></i>
-                            </div>
-                            <h4 style="color: var(--secondary); margin-bottom: 10px;">العكورة (Turbidity)</h4>
-                            <p style="line-height: 1.8; color: #555;">
-                                <strong>المعدل الطبيعي:</strong> أقل من 5 NTU<br>
-                                <strong>الأهمية:</strong> تدل على وجود جسيمات معلقة<br>
-                                <strong>تحذير:</strong> عكورة عالية قد تحتوي على بكتيريا وطفيليات
-                            </p>
+                        <h3>الصحة والعافية</h3>
+                        <p>الماء ينظم درجة حرارة الجسم، ينقل المغذيات، يخلص الجسم من السموم، ويساعد في الهضم</p>
+                    </div>
+                    
+                    <div class="importance-card">
+                        <div class="importance-icon">
+                            <i class="fas fa-industry"></i>
                         </div>
-                        
-                        <div class="team-member" style="text-align: right; padding: 30px;">
-                            <div style="font-size: 3rem; color: var(--success); margin-bottom: 15px;">
-                                <i class="fas fa-wind"></i>
-                            </div>
-                            <h4 style="color: var(--success); margin-bottom: 10px;">الأكسجين الذائب</h4>
-                            <p style="line-height: 1.8; color: #555;">
-                                <strong>المعدل الطبيعي:</strong> 5-9 mg/L<br>
-                                <strong>الأهمية:</strong> ضروري للحياة المائية<br>
-                                <strong>تحذير:</strong> انخفاض الأكسجين يدل على تلوث عضوي
-                            </p>
+                        <h3>الاقتصاد والصناعة</h3>
+                        <p>الماء يدخل في جميع الصناعات من الغذاء والدواء إلى الطاقة والبناء</p>
+                    </div>
+                    
+                    <div class="importance-card">
+                        <div class="importance-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>الزراعة والغذاء</h3>
+                        <p>70% من المياه العذبة تستخدم في الزراعة لإنتاج غذاء العالم</p>
+                    </div>
+                </div>
+
+                <h2 class="section-title"><i class="fas fa-chart-pie"></i> حقائق مائية مذهلة</h2>
+                
+                <div class="water-facts">
+                    <div class="fact-card">
+                        <div class="fact-number">97%</div>
+                        <h3>مياه مالحة</h3>
+                        <p>من إجمالي مياه الأرض هي مياه مالحة في المحيطات</p>
+                    </div>
+                    
+                    <div class="fact-card">
+                        <div class="fact-number">2.5%</div>
+                        <h3>مياه عذبة</h3>
+                        <p>فقط من مياه الأرض صالحة للاستخدام البشري</p>
+                    </div>
+                    
+                    <div class="fact-card">
+                        <div class="fact-number">1%</div>
+                        <h3>مياه متاحة</h3>
+                        <p>من المياه العذبة متاحة للاستخدام بشكل مباشر</p>
+                    </div>
+                    
+                    <div class="fact-card">
+                        <div class="fact-number">783M</div>
+                        <h3>شخص</h3>
+                        <p>حول العالم لا يحصلون على مياه شرب نظيفة</p>
+                    </div>
+                </div>
+
+                <h2 class="section-title"><i class="fas fa-lightbulb"></i> نصائح ذهبية للمياه</h2>
+                
+                <div class="water-tips-gallery">
+                    <div class="tip-card">
+                        <div class="tip-image">
+                            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="ترشيد الاستهلاك">
+                        </div>
+                        <div class="tip-content">
+                            <span class="tip-tag"><i class="fas fa-leaf"></i> ترشيد الاستهلاك</span>
+                            <h3>كيف توفر 50% من استهلاك المياه</h3>
+                            <p>• استخدم الدش بدلاً من البانيو</p>
+                            <p>• أصلح التسريبات فور اكتشافها</p>
+                            <p>• استخدم غسالات موفرة للمياه</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-image">
+                            <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="جودة المياه">
+                        </div>
+                        <div class="tip-content">
+                            <span class="tip-tag"><i class="fas fa-filter"></i> جودة المياه</span>
+                            <h3>كيف تتأكد من سلامة مياه الشرب</h3>
+                            <p>• افحص اللون والرائحة والطعم</p>
+                            <p>• استخدم فلاتر معتمدة</p>
+                            <p>• قم بفحص دوري للمياه</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-image">
+                            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="الصحة والمياه">
+                        </div>
+                        <div class="tip-content">
+                            <span class="tip-tag"><i class="fas fa-heartbeat"></i> الصحة</span>
+                            <h3>الماء وصحة جسمك</h3>
+                            <p>• اشرب 8 أكواب ماء يومياً</p>
+                            <p>• الماء يمنع الجفاف والتعب</p>
+                            <p>• يحسن التركيز والذاكرة</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="solar-benefits">
+                <div class="interactive-tip">
+                    <h2 style="color: white; margin-bottom: 20px;">
+                        <i class="fas fa-calculator"></i> حاسبة استهلاك المياه اليومي
+                    </h2>
+                    <p style="color: white; font-size: 1.1rem; margin-bottom: 30px;">
+                        اكتشف كم تحتاج من الماء يومياً بناءً على وزنك ونشاطك
+                    </p>
+                    
+                    <div class="water-calculator">
+                        <div class="calculator-input">
+                            <label>وزنك (كجم):</label>
+                            <input type="number" id="weight-input" placeholder="أدخل وزنك" min="30" max="200" value="70">
+                            <label>مستوى نشاطك:</label>
+                            <select id="activity-level">
+                                <option value="1.2">قليل النشاط</option>
+                                <option value="1.375" selected>نشاط معتدل</option>
+                                <option value="1.55">نشيط</option>
+                                <option value="1.725">نشيط جداً</option>
+                            </select>
+                            <button class="btn-save" id="calculate-water">
+                                <i class="fas fa-calculator"></i> احسب احتياجاتك
+                            </button>
+                        </div>
+                        
+                        <div class="calculator-result" id="water-result">
+                            <h3 style="color: var(--primary); margin-bottom: 10px;">نتيجة الحساب</h3>
+                            <p style="color: #000000;">احتياجاتك اليومية من الماء: <strong id="water-needs">2.5 لتر</strong></p>
+                            <p style="color: #000000;">هذا يعادل: <strong id="water-equivalent">10 أكواب</strong></p>
+                            <p style="color: #000000;"><small>نصيحة: وزع شرب الماء على مدار اليوم</small></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="solar-benefits" style="margin-top: 40px;">
                     <h3 style="margin-bottom: 20px; color: var(--primary);">
-                        <i class="fas fa-shield-alt"></i> نصائح للحفاظ على سلامة المياه
+                        <i class="fas fa-glass-whiskey"></i> وصفات مشروبات منعشة
                     </h3>
                     <div class="benefits-grid">
-                        <div class="benefit-item" style="background: rgba(44, 127, 184, 0.1); align-items: flex-start;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-top: 5px;"></i>
+                        <div class="benefit-item" style="background: rgba(127, 205, 187, 0.1);">
+                            <i class="fas fa-lemon" style="color: var(--secondary);"></i>
                             <div>
-                                <h4 style="margin-bottom: 8px; color: var(--dark);">الفحص الدوري</h4>
-                                <p style="font-size: 0.9rem; color: #666; line-height: 1.6;">
-                                    افحص خزانات المياه كل 6 أشهر وتأكد من نظافتها
-                                </p>
+                                <h4 style="margin-bottom: 5px;">ماء الليمون والنعناع</h4>
+                                <p style="font-size: 0.9rem; color: #666;">شرائح ليمون + أوراق نعناع + ماء بارد</p>
                             </div>
                         </div>
                         
-                        <div class="benefit-item" style="background: rgba(44, 127, 184, 0.1); align-items: flex-start;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-top: 5px;"></i>
+                        <div class="benefit-item" style="background: rgba(253, 174, 107, 0.1);">
+                            <i class="fas fa-apple-alt" style="color: var(--warning);"></i>
                             <div>
-                                <h4 style="margin-bottom: 8px; color: var(--dark);">الغلي والتعقيم</h4>
-                                <p style="font-size: 0.9rem; color: #666; line-height: 1.6;">
-                                    اغلي الماء لمدة دقيقة واحدة لقتل البكتيريا والفيروسات
-                                </p>
+                                <h4 style="margin-bottom: 5px;">ماء التفاح والقرفة</h4>
+                                <p style="font-size: 0.9rem; color: #666;">شرائح تفاح + عود قرفة + ماء</p>
                             </div>
                         </div>
                         
-                        <div class="benefit-item" style="background: rgba(44, 127, 184, 0.1); align-items: flex-start;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-top: 5px;"></i>
+                        <div class="benefit-item" style="background: rgba(249, 199, 79, 0.1);">
+                            <i class="fas fa-utensil-spoon" style="color: var(--solar);"></i>
                             <div>
-                                <h4 style="margin-bottom: 8px; color: var(--dark);">الترشيح المنزلي</h4>
-                                <p style="font-size: 0.9rem; color: #666; line-height: 1.6;">
-                                    استخدم فلاتر معتمدة وغيّر الفلتر كل 3-6 أشهر
-                                </p>
+                                <h4 style="margin-bottom: 5px;">ماء الخيار والنعناع</h4>
+                                <p style="font-size: 0.9rem; color: #666;">شرائح خيار + نعناع + ليمون</p>
                             </div>
                         </div>
                         
-                        <div class="benefit-item" style="background: rgba(44, 127, 184, 0.1); align-items: flex-start;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-top: 5px;"></i>
+                        <div class="benefit-item" style="background: rgba(230, 85, 90, 0.1);">
+                            <i class="fas fa-ice-cream" style="color: var(--danger);"></i>
                             <div>
-                                <h4 style="margin-bottom: 8px; color: var(--dark);">التخزين الآمن</h4>
-                                <p style="font-size: 0.9rem; color: #666; line-height: 1.6;">
-                                    احفظ الماء في حاويات نظيفة ومغلقة بعيداً عن الشمس
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="benefit-item" style="background: rgba(44, 127, 184, 0.1); align-items: flex-start;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-top: 5px;"></i>
-                            <div>
-                                <h4 style="margin-bottom: 8px; color: var(--dark);">مراقبة اللون والرائحة</h4>
-                                <p style="font-size: 0.9rem; color: #666; line-height: 1.6;">
-                                    لا تشرب ماء له لون أو رائحة غريبة
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="benefit-item" style="background: rgba(44, 127, 184, 0.1); align-items: flex-start;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-top: 5px;"></i>
-                            <div>
-                                <h4 style="margin-bottom: 8px; color: var(--dark);">تنظيف المواسير</h4>
-                                <p style="font-size: 0.9rem; color: #666; line-height: 1.6;">
-                                    نظف مواسير المياه سنوياً للتخلص من الترسبات
-                                </p>
+                                <h4 style="margin-bottom: 5px;">ماء التوت والفراولة</h4>
+                                <p style="font-size: 0.9rem; color: #666;">توت + فراولة + أوراق ريحان</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card" style="margin-top: 30px; padding: 30px; background: linear-gradient(135deg, rgba(230, 85, 90, 0.1), rgba(230, 85, 90, 0.05)); border-right: 4px solid var(--danger);">
-                    <h3 style="color: var(--danger); margin-bottom: 20px;">
-                        <i class="fas fa-exclamation-triangle"></i> علامات تحذيرية - اتصل بالجهات المختصة فوراً
+                <div class="card" style="margin-top: 30px; padding: 30px; background: linear-gradient(135deg, rgba(44, 127, 184, 0.1), rgba(44, 127, 184, 0.05)); border-right: 4px solid var(--primary);">
+                    <h3 style="color: var(--primary); margin-bottom: 20px;">
+                        <i class="fas fa-graduation-cap"></i> هل تعلم؟
                     </h3>
                     <ul style="list-style: none; padding: 0;">
                         <li style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                            <i class="fas fa-times-circle" style="color: var(--danger); margin-left: 10px;"></i>
-                            تغير مفاجئ في لون أو طعم أو رائحة المياه
+                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i>
+                            شرب الماء الدافئ مع الليمون صباحاً ينقي الجسم من السموم
                         </li>
                         <li style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                            <i class="fas fa-times-circle" style="color: var(--danger); margin-left: 10px;"></i>
-                            ظهور رواسب أو عكورة غير معتادة
+                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i>
+                            الماء البارد يحرق سعرات حرارية أكثر من الماء الدافئ
                         </li>
                         <li style="padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05);">
-                            <i class="fas fa-times-circle" style="color: var(--danger); margin-left: 10px;"></i>
-                            ظهور أعراض صحية بعد شرب الماء (إسهال، قيء، حمى)
+                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i>
+                            نقص الماء بنسبة 2% من وزن الجسم يضعف التركيز بنسبة 20%
                         </li>
                         <li style="padding: 10px 0;">
-                            <i class="fas fa-times-circle" style="color: var(--danger); margin-left: 10px;"></i>
-                            وجود طبقة زيتية أو رغوة على سطح الماء
+                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 10px;"></i>
+                            الماء يساعد على تحسين المزاج والتقليل من التوتر
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- صفحة فريق العمل -->
+            <!-- صفحة فريق العمل - محسنة -->
             <div class="page" id="team-page">
                 <div class="header">
                     <h2>فريق عمل المشروع</h2>
@@ -1862,6 +1020,32 @@
                 <div class="hero-section" style="background: linear-gradient(135deg, #6a11cb, #2575fc);">
                     <h1><i class="fas fa-graduation-cap"></i> فريق مشروع التخرج</h1>
                     <p>طلاب قسم الحاسبات والمعلومات - جامعة المنصورة - دفعة 2024</p>
+                </div>
+
+                <div class="achievements">
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>أفضل مشروع تقني</h3>
+                        <p>مسابقة الابتكار التقني 2024</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <h3>جائزة الاستدامة</h3>
+                        <p>منظمة البيئة العالمية</p>
+                    </div>
+                    
+                    <div class="achievement-card">
+                        <div class="achievement-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h3>جائزة الابتكار</h3>
+                        <p>وزارة الاتصالات وتكنولوجيا المعلومات</p>
+                    </div>
                 </div>
 
                 <div class="team-section">
@@ -1880,6 +1064,9 @@
                                 كلية الحاسبات والمعلومات<br>
                                 جامعة المنصورة
                             </p>
+                            <div style="margin-top: 15px;">
+                                <span style="background: rgba(44, 127, 184, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">دكتوراه في إنترنت الأشياء</span>
+                            </div>
                         </div>
                         <div class="supervisor-card">
                             <div class="member-avatar" style="margin: 0 auto 20px;">
@@ -1892,85 +1079,101 @@
                                 قسم نظم المعلومات<br>
                                 تخصص: إنترنت الأشياء
                             </p>
+                            <div style="margin-top: 15px;">
+                                <span style="background: rgba(127, 205, 187, 0.1); color: var(--secondary); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">ماجستير في الذكاء الاصطناعي</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="team-section" style="margin-top: 40px;">
-                    <h3 style="text-align: center; color: var(--primary); margin-bottom: 30px;">
-                        <i class="fas fa-users-cog"></i> أعضاء فريق العمل
-                    </h3>
-                    <div class="team-grid">
-                        <div class="team-member">
-                            <div class="member-avatar">
-                                <img src="https://ui-avatars.com/api/?name=أحمد+محمد&background=2c7fb8&color=fff&size=100" alt="عضو">
-                            </div>
-                            <h4 style="font-size: 1.2rem; margin-bottom: 5px;">أحمد محمد علي</h4>
-                            <p class="member-role">مطور الواجهة الأمامية</p>
-                            <p class="member-tasks">
-                                <i class="fas fa-laptop-code"></i> تصميم وتطوير واجهة المستخدم<br>
-                                <i class="fas fa-paint-brush"></i> تجربة المستخدم UX/UI<br>
-                                <i class="fas fa-chart-line"></i> الرسوم البيانية التفاعلية
-                            </p>
-                            <div style="margin-top: 15px;">
-                                <span style="background: rgba(44, 127, 184, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">HTML/CSS</span>
-                                <span style="background: rgba(44, 127, 184, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">JavaScript</span>
-                                <span style="background: rgba(44, 127, 184, 0.1); color: var(--primary); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Chart.js</span>
-                            </div>
+                <h2 class="section-title"><i class="fas fa-users-cog"></i> أعضاء فريق العمل</h2>
+                
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=أحمد+محمد&background=2c7fb8&color=fff&size=100" alt="عضو">
                         </div>
-                        
-                        <div class="team-member">
-                            <div class="member-avatar">
-                                <img src="https://ui-avatars.com/api/?name=محمود+علي&background=31a354&color=fff&size=100" alt="عضو">
-                            </div>
-                            <h4 style="font-size: 1.2rem; margin-bottom: 5px;">محمود علي حسن</h4>
-                            <p class="member-role">مطور الواجهة الخلفية</p>
-                            <p class="member-tasks">
-                                <i class="fas fa-database"></i> تصميم قواعد البيانات<br>
-                                <i class="fas fa-server"></i> واجهات برمجة التطبيقات API<br>
-                                <i class="fas fa-network-wired"></i> إدارة الخوادم
-                            </p>
-                            <div style="margin-top: 15px;">
-                                <span style="background: rgba(49, 163, 84, 0.1); color: var(--success); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Python</span>
-                                <span style="background: rgba(49, 163, 84, 0.1); color: var(--success); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">MySQL</span>
-                                <span style="background: rgba(49, 163, 84, 0.1); color: var(--success); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Node.js</span>
-                            </div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 5px;">أحمد محمد علي</h4>
+                        <p class="member-role">مطور الواجهة الأمامية</p>
+                        <p class="member-tasks">
+                            <i class="fas fa-laptop-code"></i> تصميم وتطوير واجهة المستخدم<br>
+                            <i class="fas fa-paint-brush"></i> تجربة المستخدم UX/UI<br>
+                            <i class="fas fa-chart-line"></i> الرسوم البيانية التفاعلية
+                        </p>
+                        <div style="margin-top: 15px;">
+                            <span class="stat-badge primary">HTML/CSS</span>
+                            <span class="stat-badge primary">JavaScript</span>
+                            <span class="stat-badge primary">React</span>
                         </div>
-                        
-                        <div class="team-member">
-                            <div class="member-avatar">
-                                <img src="https://ui-avatars.com/api/?name=فاطمة+خالد&background=fdae6b&color=fff&size=100" alt="عضو">
-                            </div>
-                            <h4 style="font-size: 1.2rem; margin-bottom: 5px;">فاطمة خالد إبراهيم</h4>
-                            <p class="member-role">محللة البيانات</p>
-                            <p class="member-tasks">
-                                <i class="fas fa-chart-bar"></i> تحليل البيانات والإحصاء<br>
-                                <i class="fas fa-brain"></i> نماذج الذكاء الاصطناعي<br>
-                                <i class="fas fa-file-alt"></i> إعداد التقارير
-                            </p>
-                            <div style="margin-top: 15px;">
-                                <span style="background: rgba(253, 174, 107, 0.1); color: var(--warning); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Python</span>
-                                <span style="background: rgba(253, 174, 107, 0.1); color: var(--warning); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Machine Learning</span>
-                                <span style="background: rgba(253, 174, 107, 0.1); color: var(--warning); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Data Analysis</span>
-                            </div>
+                        <div style="margin-top: 10px;">
+                            <a href="#" style="color: var(--primary); margin: 0 5px;"><i class="fab fa-github"></i></a>
+                            <a href="#" style="color: var(--primary); margin: 0 5px;"><i class="fab fa-linkedin"></i></a>
                         </div>
-                        
-                        <div class="team-member">
-                            <div class="member-avatar">
-                                <img src="https://ui-avatars.com/api/?name=سارة+أحمد&background=e6555a&color=fff&size=100" alt="عضو">
-                            </div>
-                            <h4 style="font-size: 1.2rem; margin-bottom: 5px;">سارة أحمد محمود</h4>
-                            <p class="member-role">خبيرة الجودة والاختبار</p>
-                            <p class="member-tasks">
-                                <i class="fas fa-clipboard-check"></i> اختبار النظام والجودة<br>
-                                <i class="fas fa-bug"></i> اكتشاف وإصلاح الأخطاء<br>
-                                <i class="fas fa-book"></i> التوثيق الفني
-                            </p>
-                            <div style="margin-top: 15px;">
-                                <span style="background: rgba(230, 85, 90, 0.1); color: var(--danger); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">QA Testing</span>
-                                <span style="background: rgba(230, 85, 90, 0.1); color: var(--danger); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Documentation</span>
-                                <span style="background: rgba(230, 85, 90, 0.1); color: var(--danger); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; margin: 3px;">Debugging</span>
-                            </div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=محمود+علي&background=31a354&color=fff&size=100" alt="عضو">
+                        </div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 5px;">محمود علي حسن</h4>
+                        <p class="member-role">مطور الواجهة الخلفية</p>
+                        <p class="member-tasks">
+                            <i class="fas fa-database"></i> تصميم قواعد البيانات<br>
+                            <i class="fas fa-server"></i> واجهات برمجة التطبيقات API<br>
+                            <i class="fas fa-network-wired"></i> إدارة الخوادم
+                        </p>
+                        <div style="margin-top: 15px;">
+                            <span class="stat-badge success">Python</span>
+                            <span class="stat-badge success">Django</span>
+                            <span class="stat-badge success">MySQL</span>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <a href="#" style="color: var(--success); margin: 0 5px;"><i class="fab fa-github"></i></a>
+                            <a href="#" style="color: var(--success); margin: 0 5px;"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=فاطمة+خالد&background=fdae6b&color=fff&size=100" alt="عضو">
+                        </div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 5px;">فاطمة خالد إبراهيم</h4>
+                        <p class="member-role">محللة البيانات</p>
+                        <p class="member-tasks">
+                            <i class="fas fa-chart-bar"></i> تحليل البيانات والإحصاء<br>
+                            <i class="fas fa-brain"></i> نماذج الذكاء الاصطناعي<br>
+                            <i class="fas fa-file-alt"></i> إعداد التقارير
+                        </p>
+                        <div style="margin-top: 15px;">
+                            <span class="stat-badge warning">Python</span>
+                            <span class="stat-badge warning">Machine Learning</span>
+                            <span class="stat-badge warning">Data Analysis</span>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <a href="#" style="color: var(--warning); margin: 0 5px;"><i class="fab fa-github"></i></a>
+                            <a href="#" style="color: var(--warning); margin: 0 5px;"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <img src="https://ui-avatars.com/api/?name=سارة+أحمد&background=e6555a&color=fff&size=100" alt="عضو">
+                        </div>
+                        <h4 style="font-size: 1.2rem; margin-bottom: 5px;">سارة أحمد محمود</h4>
+                        <p class="member-role">خبيرة الجودة والاختبار</p>
+                        <p class="member-tasks">
+                            <i class="fas fa-clipboard-check"></i> اختبار النظام والجودة<br>
+                            <i class="fas fa-bug"></i> اكتشاف وإصلاح الأخطاء<br>
+                            <i class="fas fa-book"></i> التوثيق الفني
+                        </p>
+                        <div style="margin-top: 15px;">
+                            <span class="stat-badge danger">QA Testing</span>
+                            <span class="stat-badge danger">Documentation</span>
+                            <span class="stat-badge danger">Debugging</span>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <a href="#" style="color: var(--danger); margin: 0 5px;"><i class="fab fa-github"></i></a>
+                            <a href="#" style="color: var(--danger); margin: 0 5px;"><i class="fab fa-linkedin"></i></a>
                         </div>
                     </div>
                 </div>
@@ -2010,12 +1213,70 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="image-gallery" style="margin-top: 40px;">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="فريق العمل">
+                        <div class="gallery-overlay">
+                            <h4>فريق العمل</h4>
+                            <p>اجتماعات تخطيط المشروع</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="التجارب الميدانية">
+                        <div class="gallery-overlay">
+                            <h4>التجارب الميدانية</h4>
+                            <p>اختبار المحطات في الموقع</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="العرض النهائي">
+                        <div class="gallery-overlay">
+                            <h4>العرض النهائي</h4>
+                            <p>عرض المشروع للجنة التحكيم</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- صفحة الإعدادات -->
+            <!-- صفحة الإعدادات - محسنة -->
             <div class="page" id="settings-page">
                 <div class="header">
                     <h2>إعدادات النظام</h2>
+                </div>
+
+                <div class="settings-profile">
+                    <h3><i class="fas fa-user-cog"></i> الملف الشخصي</h3>
+                    <div class="profile-form">
+                        <div class="input-group">
+                            <label for="profile-name">الاسم الكامل</label>
+                            <input type="text" id="profile-name" value="أحمد محمد علي">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="profile-email">البريد الإلكتروني</label>
+                            <input type="email" id="profile-email" value="ahmed@water.com">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="profile-phone">رقم الهاتف</label>
+                            <input type="tel" id="profile-phone" value="+20123456789">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="profile-role">الدور</label>
+                            <select id="profile-role">
+                                <option value="admin" selected>مدير النظام</option>
+                                <option value="tech">فني مختبر</option>
+                                <option value="monitor">مراقب جودة</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn-save" style="margin-top: 20px;">
+                        <i class="fas fa-save"></i> حفظ التغييرات
+                    </button>
                 </div>
 
                 <div class="settings-section">
@@ -2166,6 +1427,35 @@
                                 </label>
                             </div>
                         </div>
+                        
+                        <div class="setting-group">
+                            <h4>تخصيص الألوان</h4>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h5>اللون الأساسي</h5>
+                                    <p>اللون الرئيسي للواجهة</p>
+                                </div>
+                                <input type="color" id="primary-color" value="#2c7fb8" style="width: 40px; height: 40px; border: none; border-radius: 5px; cursor: pointer;">
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h5>لون الثانوي</h5>
+                                    <p>لون العناصر الثانوية</p>
+                                </div>
+                                <input type="color" id="secondary-color" value="#7fcdbb" style="width: 40px; height: 40px; border: none; border-radius: 5px; cursor: pointer;">
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h5>نمط البطاقات</h5>
+                                    <p>تخصيص مظهر البطاقات</p>
+                                </div>
+                                <select class="select-setting" id="card-style">
+                                    <option value="flat">مسطحة</option>
+                                    <option value="shadow" selected>بظلال</option>
+                                    <option value="border">بحدود</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -2216,6 +1506,27 @@
                                     <input type="checkbox" id="activity-log" checked>
                                     <span class="slider"></span>
                                 </label>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <h4>تغيير كلمة المرور</h4>
+                            <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
+                                <div class="input-group" style="width: 100%; margin-bottom: 15px;">
+                                    <label for="current-password">كلمة المرور الحالية</label>
+                                    <input type="password" id="current-password" placeholder="أدخل كلمة المرور الحالية">
+                                </div>
+                                <div class="input-group" style="width: 100%; margin-bottom: 15px;">
+                                    <label for="new-password">كلمة المرور الجديدة</label>
+                                    <input type="password" id="new-password" placeholder="أدخل كلمة المرور الجديدة">
+                                </div>
+                                <div class="input-group" style="width: 100%; margin-bottom: 15px;">
+                                    <label for="confirm-new-password">تأكيد كلمة المرور الجديدة</label>
+                                    <input type="password" id="confirm-new-password" placeholder="أعد إدخال كلمة المرور الجديدة">
+                                </div>
+                                <button class="btn-save">
+                                    <i class="fas fa-key"></i> تغيير كلمة المرور
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2281,317 +1592,6 @@
         </div>
     </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const users = {
-        'admin@water.com': { password: 'Admin@2024', name: 'أحمد محمد', role: 'admin' },
-        'tech@water.com': { password: 'Tech@2024', name: 'محمود علي', role: 'tech' }
-    };
-
-    let currentUser = null;
-    let map = null;
-    let charts = [];
-
-    // تبديل التبويبات
-    document.querySelectorAll('.login-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabName = tab.dataset.tab;
-            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tabName + '-form').classList.add('active');
-        });
-    });
-
-    // الحسابات التجريبية
-    document.querySelectorAll('.demo-account').forEach(account => {
-        account.addEventListener('click', () => {
-            document.getElementById('email').value = account.dataset.email;
-            document.getElementById('password').value = account.dataset.password;
-            document.querySelectorAll('.login-tab')[0].click();
-        });
-    });
-
-    // تسجيل الدخول
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        if (users[email] && users[email].password === password) {
-            currentUser = users[email];
-            showMessage('login-message', 'تم تسجيل الدخول بنجاح!', 'success');
-            setTimeout(() => {
-                document.body.classList.add('logged-in');
-                document.getElementById('current-user-name').textContent = currentUser.name;
-                initApp();
-            }, 1000);
-        } else {
-            showMessage('login-message', 'البريد الإلكتروني أو كلمة المرور غير صحيحة', 'error');
-        }
-    });
-
-    // التسجيل
-    document.getElementById('register-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const password = document.getElementById('reg-password').value;
-        const confirmPassword = document.getElementById('reg-confirm-password').value;
-
-        if (password !== confirmPassword) {
-            showMessage('register-message', 'كلمات المرور غير متطابقة', 'error');
-            return;
-        }
-
-        showMessage('register-message', 'تم إنشاء الحساب بنجاح!', 'success');
-    });
-
-    // استعادة كلمة المرور
-    document.getElementById('reset-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        showMessage('reset-message', 'تم إرسال رابط الاستعادة إلى بريدك الإلكتروني', 'success');
-    });
-
-    // روابط التنقل
-    document.getElementById('show-reset-tab').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelectorAll('.login-tab')[2].click();
-    });
-
-    document.getElementById('back-to-login').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.querySelectorAll('.login-tab')[0].click();
-    });
-
-    // إظهار/إخفاء كلمة المرور
-    ['toggleLoginPassword', 'toggleRegPassword', 'toggleConfirmPassword'].forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-            btn.addEventListener('click', () => {
-                const input = btn.previousElementSibling.previousElementSibling;
-                const type = input.type === 'password' ? 'text' : 'password';
-                input.type = type;
-                btn.querySelector('i').className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
-            });
-        }
-    });
-
-    // فحص قوة كلمة المرور
-    const regPassword = document.getElementById('reg-password');
-    if (regPassword) {
-        regPassword.addEventListener('input', (e) => {
-            const password = e.target.value;
-            const bar = document.getElementById('password-strength-bar');
-            const hint = document.getElementById('password-hint');
-            
-            let strength = 0;
-            if (password.length >= 8) strength++;
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[a-z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^A-Za-z0-9]/.test(password)) strength++;
-            
-            bar.style.width = (strength * 20) + '%';
-            bar.className = 'password-strength-bar';
-            
-            if (strength < 2) {
-                bar.classList.add('strength-weak');
-                hint.textContent = 'كلمة مرور ضعيفة';
-                hint.style.color = '#e6555a';
-            } else if (strength < 4) {
-                bar.classList.add('strength-medium');
-                hint.textContent = 'كلمة مرور متوسطة';
-                hint.style.color = '#fdae6b';
-            } else {
-                bar.classList.add('strength-strong');
-                hint.textContent = 'كلمة مرور قوية';
-                hint.style.color = '#31a354';
-            }
-        });
-    }
-
-    // التنقل في التطبيق
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            
-            link.classList.add('active');
-            const pageId = link.dataset.page + '-page';
-            document.getElementById(pageId).classList.add('active');
-            
-            if (pageId === 'map-page') {
-                initMap();
-            }
-        });
-    });
-
-    // تسجيل الخروج
-    const logoutLink = document.getElementById('logoutLink');
-    if (logoutLink) {
-        logoutLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
-                document.body.classList.remove('logged-in');
-                currentUser = null;
-                document.getElementById('email').value = '';
-                document.getElementById('password').value = '';
-                if (map) {
-                    map.remove();
-                    map = null;
-                }
-                charts.forEach(chart => chart.destroy());
-                charts = [];
-            }
-        });
-    }
-
-    // الوضع الليلي
-    const darkModeToggle = document.getElementById('dark-mode');
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                document.body.classList.add('dark-mode');
-            } else {
-                document.body.classList.remove('dark-mode');
-            }
-        });
-    }
-
-    // دالة عرض الرسائل
-    function showMessage(id, message, type) {
-        const element = document.getElementById(id);
-        if (element) {
-            element.textContent = message;
-            element.className = 'message ' + type;
-            element.style.display = 'block';
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 5000);
-        }
-    }
-
-    // تهيئة التطبيق
-    function initApp() {
-        initCharts();
-    }
-
-    // تهيئة الرسوم البيانية
-    function initCharts() {
-        const waterQualityCtx = document.getElementById('waterQualityChart');
-        if (waterQualityCtx) {
-            const waterChart = new Chart(waterQualityCtx.getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: ['الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت', 'الأحد'],
-                    datasets: [
-                        {
-                            label: 'الأس الهيدروجيني',
-                            data: [7.1, 7.3, 7.0, 7.2, 7.4, 7.1, 7.2],
-                            borderColor: '#2c7fb8',
-                            backgroundColor: 'rgba(44, 127, 184, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        },
-                        {
-                            label: 'العكورة (NTU)',
-                            data: [2.5, 2.8, 3.2, 2.1, 1.9, 2.3, 2.1],
-                            borderColor: '#7fcdbb',
-                            backgroundColor: 'rgba(127, 205, 187, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            rtl: true
-                        }
-                    }
-                }
-            });
-            charts.push(waterChart);
-        }
-
-        const stationsStatusCtx = document.getElementById('stationsStatusChart');
-        if (stationsStatusCtx) {
-            const statusChart = new Chart(stationsStatusCtx.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: ['طبيعي', 'تحذير', 'حرج'],
-                    datasets: [{
-                        data: [3, 1, 1],
-                        backgroundColor: ['#31a354', '#fdae6b', '#e6555a']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            rtl: true
-                        }
-                    }
-                }
-            });
-            charts.push(statusChart);
-        }
-    }
-
-    // تهيئة الخريطة
-    function initMap() {
-        const mapElement = document.getElementById('map');
-        if (!mapElement) return;
-
-        if (map) {
-            map.remove();
-        }
-
-        try {
-            map = L.map('map').setView([30.0444, 31.2357], 7);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-            
-            const stations = [
-                { lat: 30.0444, lng: 31.2357, name: 'محطة النيل الرئيسية', status: 'normal' },
-                { lat: 31.4044, lng: 30.4167, name: 'فرع رشيد', status: 'warning' },
-                { lat: 31.0414, lng: 31.3583, name: 'فرع دمياط', status: 'normal' },
-                { lat: 30.5833, lng: 32.2667, name: 'قناة الإسماعيلية', status: 'critical' },
-                { lat: 23.9667, lng: 32.8833, name: 'بحيرة ناصر', status: 'normal' }
-            ];
-            
-            stations.forEach(station => {
-                let color;
-                if (station.status === 'normal') color = '#31a354';
-                else if (station.status === 'warning') color = '#fdae6b';
-                else color = '#e6555a';
-                
-                L.circleMarker([station.lat, station.lng], {
-                    color: color,
-                    fillColor: color,
-                    fillOpacity: 0.7,
-                    radius: 8
-                }).addTo(map).bindPopup(`
-                    <strong>${station.name}</strong><br>
-                    الحالة: ${station.status === 'normal' ? 'طبيعي' : station.status === 'warning' ? 'تحذير' : 'حرج'}
-                `);
-            });
-
-            setTimeout(() => {
-                map.invalidateSize();
-            }, 100);
-        } catch (error) {
-            console.error('Error initializing map:', error);
-        }
-    }
-});
-</script>
+    <script src="main.js"></script>
 </body>
 </html>
